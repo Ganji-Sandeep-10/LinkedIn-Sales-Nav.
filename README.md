@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LinkedIn Sales Navigator – Custom Filter UI (RapidAPI Integration)
 
-## Getting Started
+This project is a sleek, interactive **filter-based UI panel** that simulates key functionality of **LinkedIn Sales Navigator**, allowing users to manually apply advanced filters (like Job Title, Company, Location, and Experience Level) to refine search results.
 
-First, run the development server:
+It demonstrates **real-world integration of RapidAPI**, a responsive **dark-mode UI**, and smart filtering UX design — all built using **Next.js**, **TypeScript**, and **custom CSS** (no Tailwind).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 What This Project Is
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+A frontend UI system that mimics advanced filter logic of professional tools like LinkedIn Sales Navigator, powered by live suggestion APIs via [RapidAPI](https://rapidapi.com/mgujjargamingm/api/linkedin-sales-navigator-no-cookies-required).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> You type – it suggests options from the API.  
+> You select – it adds filter chips.  
+> You toggle – it switches between **include/exclude**.
 
-## Learn More
+This behavior is fully dynamic and designed to be used in search, recommendation, and CRM platforms.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 💡 Why This Project Matters
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+🔍 **User Intent Simulation**: Captures how real-world recruiters or sales reps filter data on platforms like LinkedIn.
 
-## Deploy on Vercel
+🧠 **RapidAPI Integration**: Demonstrates API-driven suggestions without browser cookies or LinkedIn login.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+🎨 **Polished UI/UX**: Built to match modern SaaS design — chips, hover effects, shadow depth, and scrollbar customization.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+📦 **Modular Design**: Componentized architecture (`FilterSection`, `FilterChip`, `SuggestionDropdown`, etc.) makes it scalable for future filters like "Industry", "Seniority", etc.
+
+---
+
+## 🛠️ How It Works
+
+- **Input Box**: As users type, a debounced request is sent to the appropriate API endpoint.
+- **Suggestions Dropdown**: Rendered below the input box with `Include` / `Exclude` actions.
+- **Filter Chips**: Added below the filter label, showing current filter state. Toggling flips inclusion/exclusion; clicking the close icon removes the chip.
+- **API Endpoints Used**:
+  - `/filter_job_title_suggestions`
+  - `/filter_company_suggestions`
+  - `/filter_geography_location_region_suggestions`
+  - `/filter_years_in`
+
+---
+
+## 🧩 Key Technologies
+
+- **Next.js (App Router)** for structure and performance
+- **TypeScript** for type safety and DX
+- **Custom CSS (Dark Theme)** for visual fidelity (no Tailwind or Bootstrap)
+- **RapidAPI** for external data integration
+- **Debounce** and state management using `useEffect`, `useState`, and `useRef`
+
+---
+
+## 📌 Project Structure Highlights
+
+src/
+├── components/
+│ ├── FilterSection.tsx
+│ ├── FilterChip.tsx
+│ └── SuggestionDropdown.tsx
+├── pages/
+│ └── api/ // API proxy routes for server-side fetches
+├── styles/
+│ └── filters.module.css // Dark theme, scrollbars, rounded UIs
