@@ -1,8 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
-export async function POST(req: NextRequest) {
-  const { query } = await req.json();
+type CompanySuggestionItem = {
+  displayValue: string;
+  [key: string]: unknown; // allows other properties
+};
+
+type ApiResponse = {
+  data: CompanySuggestionItem[];
+};
+
+export async function POST(req: NextRequest): Promise<NextResponse> {
+  const { query }: { query: string } = await req.json();
 
   const apiKey = process.env.RAPIDAPI_KEY;
   const apiHost = process.env.RAPIDAPI_HOST;
@@ -12,7 +21,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const res = await axios.post(
+    const res = await axios.post<ApiResponse>(
       'https://linkedin-sales-navigator-no-cookies-required.p.rapidapi.com/filter_company_suggestions',
       { query },
       {
@@ -24,11 +33,10 @@ export async function POST(req: NextRequest) {
       }
     );
 
-    const suggestions = res.data.data?.map((item: any) => item.displayValue) || [];
+    const suggestions = res.data.data?.map((item) => item.displayValue) || [];
     return NextResponse.json({ suggestions });
-
-  } catch (error: any) {
-    console.error('API Error:', error.response?.data || error.message);
+  } catch (error) {
+    console.error('API Error:', (error as any)?.response?.data || (error as Error).message);
     return NextResponse.json({ error: 'Failed to fetch suggestions' }, { status: 500 });
   }
 }

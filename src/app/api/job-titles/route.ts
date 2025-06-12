@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
-export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const query = body.query || 'a';
+type JobTitleItem = {
+  displayValue: string;
+  [key: string]: unknown;
+};
+
+type JobTitleApiResponse = {
+  data: JobTitleItem[];
+};
+
+export async function POST(req: NextRequest): Promise<NextResponse> {
+  const { query }: { query: string } = await req.json();
 
   const apiKey = process.env.RAPIDAPI_KEY;
   const apiHost = process.env.RAPIDAPI_HOST;
@@ -12,23 +20,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'API credentials missing' }, { status: 500 });
   }
 
-  const options = {
-    method: 'POST',
-    url: 'https://linkedin-sales-navigator-no-cookies-required.p.rapidapi.com/filter_job_title_suggestions',
-    headers: {
-      'x-rapidapi-key': apiKey,
-      'x-rapidapi-host': apiHost,
-      'Content-Type': 'application/json',
-    },
-    data: { query },
-  };
-
   try {
-    const response = await axios.request(options);
-    const titles = (response.data.data || []).map((item: any) => item.displayValue);
-    return NextResponse.json({ suggestions: titles });
-  } catch (error: any) {
-    console.error('API call error:', error?.response?.data || error.message);
+    const response = await axios.post<JobTitleApiResponse>(
+      'https://linkedin-sales-navigator-no-cookies-required.p.rapidapi.com/filter_job_title_suggestions',
+      { query: query || 'a' },
+      {
+        headers: {
+          'x-rapidapi-key': apiKey,
+          'x-rapidapi-host': apiHost,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const suggestions = response.data.data?.map(item => item.displayValue) || [];
+    return NextResponse.json({ suggestions });
+
+  } catch (err) {
+    const error = err as { response?: { data: unknown }; message: string };
+    console.error('API Error:', error.response?.data || error.message);
     return NextResponse.json({ error: 'Failed to fetch job titles' }, { status: 500 });
   }
 }
