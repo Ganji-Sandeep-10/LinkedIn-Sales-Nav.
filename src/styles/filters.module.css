@@ -26,12 +26,13 @@
 /* === Filter Row: Label + Input Aligned === */
 .filterBlock {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 4px;
-  gap: 16px;
-  margin-bottom: 12px;
+  flex-direction: column;
+  margin-bottom: 18px;
+  padding: 0 12px;
+  position: relative;
+
 }
+
 
 /* === Filter Label === */
 .filterBlock h4 {
@@ -47,7 +48,8 @@
 .inputBox {
   height: 36px;
   width: 220px;
-  padding: 8px 14px;
+  margin-top: 8px;
+  padding: 0px 8px;
   background-color: #000000;
   color: #e8e8e8;
   border: 1px solid #3c3c3c;
@@ -180,4 +182,125 @@
 .close {
   color: #f87171;
   font-weight: bold;
+}
+
+/* 🆕 Wrap input + dropdown together */
+.inputWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ⬇️ Ensure dropdown appears below input */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+/* ✅ Chips below everything */
+.chipContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+  padding-left: 2px;
+}
+/* === Dark Scrollbar for Dropdown === */
+.dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dropdown::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 8px;
+}
+
+.dropdown::-webkit-scrollbar-thumb {
+  background-color: #525252;
+  border-radius: 8px;
+}
+
+.dropdown::-webkit-scrollbar-thumb:hover {
+  background-color: #8c8c8c;
+}
+
+
+.filterBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 12px;
+  margin-bottom: 20px;
+}
+
+/* Align label and input side by side */
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+/* Label */
+.labelRow h4 {
+  font-size: 14px;
+  font-weight: 500;
+  color: #e8e8e8;
+  white-space: nowrap;
+  margin: 0;
+}
+
+/* Wrap input and dropdown */
+.inputWrapper {
+  position: relative;
+}
+
+/* Align chips under input */
+.chipContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+   /* align under input */
+  padding-left: 112px; /* same as total width of label + spacing */
+}
+.filterBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 12px;
+  margin-bottom: 20px;
+}
+
+/* Row: Label + Input */
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+/* Label */
+.labelRow h4 {
+  font-size: 14px;
+  font-weight: 500;
+  color: #e8e8e8;
+  white-space: nowrap;
+  margin: 0;
+}
+
+/* Input wrap (relative for dropdown) */
+.inputWrapper {
+  position: relative;
+}
+
+/* ✅ Align chips to start of filterBlock (not under input!) */
+.chipContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+  padding-left: 0;     /* ✅ No left indent */
 }

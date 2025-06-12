@@ -5,12 +5,19 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const query = body.query || 'a';
 
+  const apiKey = process.env.RAPIDAPI_KEY;
+  const apiHost = process.env.RAPIDAPI_HOST;
+
+  if (!apiKey || !apiHost) {
+    return NextResponse.json({ error: 'API credentials missing' }, { status: 500 });
+  }
+
   const options = {
     method: 'POST',
     url: 'https://linkedin-sales-navigator-no-cookies-required.p.rapidapi.com/filter_job_title_suggestions',
     headers: {
-      'x-rapidapi-key': '64c824edb0msh3a8874c4b32af44p13c465jsn6594f857b5e3',
-      'x-rapidapi-host': 'linkedin-sales-navigator-no-cookies-required.p.rapidapi.com',
+      'x-rapidapi-key': apiKey,
+      'x-rapidapi-host': apiHost,
       'Content-Type': 'application/json',
     },
     data: { query },
@@ -21,6 +28,7 @@ export async function POST(req: NextRequest) {
     const titles = (response.data.data || []).map((item: any) => item.displayValue);
     return NextResponse.json({ suggestions: titles });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('API call error:', error?.response?.data || error.message);
+    return NextResponse.json({ error: 'Failed to fetch job titles' }, { status: 500 });
   }
 }
