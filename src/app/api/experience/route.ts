@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
-type ExperienceSuggestionItem = {
+type ExperienceItem = {
   displayValue: string;
-  [key: string]: unknown; // for any extra keys the API might return
+  [key: string]: unknown;
 };
 
-type ExperienceApiResponse = {
-  data: ExperienceSuggestionItem[];
+type ApiResponse = {
+  data: ExperienceItem[];
 };
 
-export async function POST(req: NextRequest): Promise<NextResponse> {
-  const { query }: { query: string } = await req.json();
+export async function POST(req: NextRequest) {
+  const { query } = await req.json();
 
   const apiKey = process.env.RAPIDAPI_KEY;
   const apiHost = process.env.RAPIDAPI_HOST;
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   try {
-    const res = await axios.post<ExperienceApiResponse>(
+    const res = await axios.post<ApiResponse>(
       'https://linkedin-sales-navigator-no-cookies-required.p.rapidapi.com/filter_years_in',
       { query },
       {
@@ -33,12 +33,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       }
     );
 
-    const suggestions = res.data.data?.map(item => item.displayValue) || [];
+    const suggestions = res.data?.data?.map(item => item.displayValue) || [];
     return NextResponse.json({ suggestions });
 
   } catch (error) {
-    const err = error as any;
-    console.error('API Error:', err?.response?.data || err.message);
+    console.error('API Error:', (error as any)?.response?.data || (error as Error).message);
     return NextResponse.json({ error: 'Failed to fetch suggestions' }, { status: 500 });
   }
 }

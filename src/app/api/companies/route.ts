@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
-type CompanySuggestionItem = {
+type CompanyItem = {
   displayValue: string;
-  [key: string]: unknown; // allows other properties
+  [key: string]: unknown;
 };
 
 type ApiResponse = {
-  data: CompanySuggestionItem[];
+  data: CompanyItem[];
 };
 
-export async function POST(req: NextRequest): Promise<NextResponse> {
-  const { query }: { query: string } = await req.json();
+export async function POST(req: NextRequest) {
+  const { query } = await req.json();
 
   const apiKey = process.env.RAPIDAPI_KEY;
   const apiHost = process.env.RAPIDAPI_HOST;
@@ -33,8 +33,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       }
     );
 
-    const suggestions = res.data.data?.map((item) => item.displayValue) || [];
+    const suggestions = res.data?.data?.map(item => item.displayValue) || [];
     return NextResponse.json({ suggestions });
+
   } catch (error) {
     console.error('API Error:', (error as any)?.response?.data || (error as Error).message);
     return NextResponse.json({ error: 'Failed to fetch suggestions' }, { status: 500 });
