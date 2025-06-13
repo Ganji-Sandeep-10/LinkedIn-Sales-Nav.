@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
-type JobTitleItem = {
+interface JobTitleItem {
   displayValue: string;
   [key: string]: unknown;
-};
+}
 
-type ApiResponse = {
+interface ApiResponse {
   data: JobTitleItem[];
-};
+}
 
 export async function POST(req: NextRequest) {
   const { query } = await req.json();
@@ -36,8 +36,18 @@ export async function POST(req: NextRequest) {
     const titles = response.data?.data?.map(item => item.displayValue) || [];
     return NextResponse.json({ suggestions: titles });
 
-  } catch (error) {
-    console.error('API call error:', (error as any)?.response?.data || (error as Error).message);
-    return NextResponse.json({ error: 'Failed to fetch job titles' }, { status: 500 });
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const axiosErr = error as AxiosError<{ message?: string }>;
+      return NextResponse.json(
+        { error: axiosErr.response?.data?.message ?? axiosErr.message },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 }
+    );
   }
 }
